@@ -12,7 +12,30 @@ defmodule Doggo.MixProject do
       deps: deps(),
       compilers: [:phoenix_live_view] ++ Mix.compilers(),
       listeners: [Phoenix.CodeReloader],
-      consolidate_protocols: Mix.env() != :dev
+      consolidate_protocols: Mix.env() != :dev,
+      usage_rules: usage_rules()
+    ]
+  end
+
+  defp usage_rules do
+    # Configured for Claude since Cursor will pick up CLAUDE.md and detect Claude skills/agents
+    [
+      file: "CLAUDE.md",
+      usage_rules: [
+        "phoenix:all"
+      ],
+      skills: [
+        location: ".claude/skills",
+        build: [
+          "ash-framework": [
+            description:
+              "Use this skill when working with Ash Framework domains, resources, " <>
+                "actions, or any Ash extensions. Always consult this when making any " <>
+                "domain/resource changes, features, or fixes.",
+            usage_rules: [:ash, ~r/^ash_/, :spark]
+          ]
+        ]
+      ]
     ]
   end
 

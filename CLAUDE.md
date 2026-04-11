@@ -1,52 +1,19 @@
-This is a web application written using the Phoenix web framework.
-
-## Project guidelines
-
-- Use `mix precommit` alias when you are done with all changes and fix any pending issues
-- Use the already included and available `:req` (`Req`) library for HTTP requests, **avoid** `:httpoison`, `:tesla`, and `:httpc`. Req is included by default and is the preferred HTTP client for Phoenix apps
-
-### Phoenix v1.8 guidelines
-
-- **Always** begin your LiveView templates with `<Layouts.app flash={@flash} ...>` which wraps all inner content
-- The `MyAppWeb.Layouts` module is aliased in the `my_app_web.ex` file, so you can use it without needing to alias it again
-- Anytime you run into errors with no `current_scope` assign:
-  - You failed to follow the Authenticated Routes guidelines, or you failed to pass `current_scope` to `<Layouts.app>`
-  - **Always** fix the `current_scope` error by moving your routes to the proper `live_session` and ensure you pass `current_scope` as needed
-- Phoenix v1.8 moved the `<.flash_group>` component to the `Layouts` module. You are **forbidden** from calling `<.flash_group>` outside of the `layouts.ex` module
-- Out of the box, `core_components.ex` imports an `<.icon name="hero-x-mark" class="w-5 h-5"/>` component for for hero icons. **Always** use the `<.icon>` component for icons, **never** use `Heroicons` modules or similar
-- **Always** use the imported `<.input>` component for form inputs from `core_components.ex` when available. `<.input>` is imported and using it will save steps and prevent errors
-- If you override the default input classes (`<.input class="myclass px-2 py-1 rounded-lg">)`) class with your own values, no default classes are inherited, so your
-custom classes must fully style the input
-
-### JS and CSS guidelines
-
-- **Use Tailwind CSS classes and custom CSS rules** to create polished, responsive, and visually stunning interfaces.
-- Tailwindcss v4 **no longer needs a tailwind.config.js** and uses a new import syntax in `app.css`:
-
-      @import "tailwindcss" source(none);
-      @source "../css";
-      @source "../js";
-      @source "../../lib/my_app_web";
-
-- **Always use and maintain this import syntax** in the app.css file for projects generated with `phx.new`
-- **Never** use `@apply` when writing raw css
-- **Always** manually write your own tailwind-based components instead of using daisyUI for a unique, world-class design
-- Out of the box **only the app.js and app.css bundles are supported**
-  - You cannot reference an external vendor'd script `src` or link `href` in the layouts
-  - You must import the vendor deps into app.js and app.css to use them
-  - **Never write inline <script>custom js</script> tags within templates**
-
-### UI/UX & design guidelines
-
-- **Produce world-class UI designs** with a focus on usability, aesthetics, and modern design principles
-- Implement **subtle micro-interactions** (e.g., button hover effects, and smooth transitions)
-- Ensure **clean typography, spacing, and layout balance** for a refined, premium look
-- Focus on **delightful details** like hover effects, loading states, and smooth page transitions
-
-
 <!-- usage-rules-start -->
+<!-- phoenix:ecto-start -->
+## phoenix:ecto usage
+## Ecto Guidelines
 
+- **Always** preload Ecto associations in queries when they'll be accessed in templates, ie a message that needs to reference the `message.user.email`
+- Remember `import Ecto.Query` and other supporting modules when you write `seeds.exs`
+- `Ecto.Schema` fields always use the `:string` type, even for `:text`, columns, ie: `field :name, :string`
+- `Ecto.Changeset.validate_number/2` **DOES NOT SUPPORT the `:allow_nil` option**. By default, Ecto validations only run if a change for the given field exists and the change value is not nil, so such as option is never needed
+- You **must** use `Ecto.Changeset.get_field(changeset, :field)` to access changeset fields
+- Fields which are set programmatically, such as `user_id`, must not be listed in `cast` calls or similar for security purposes. Instead they must be explicitly set when creating the struct
+- **Always** invoke `mix ecto.gen.migration migration_name_using_underscores` when generating migration files, so the correct timestamp and conventions are applied
+
+<!-- phoenix:ecto-end -->
 <!-- phoenix:elixir-start -->
+## phoenix:elixir usage
 ## Elixir guidelines
 
 - Elixir lists **do not support index based access via the access syntax**
@@ -101,28 +68,11 @@ custom classes must fully style the input
       assert_receive {:DOWN, ^ref, :process, ^pid, :normal}
 
    - Instead of sleeping to synchronize before the next call, **always** use `_ = :sys.get_state/1` to ensure the process has handled prior messages
+
+
 <!-- phoenix:elixir-end -->
-
-<!-- phoenix:phoenix-start -->
-## Phoenix guidelines
-
-- Remember Phoenix router `scope` blocks include an optional alias which is prefixed for all routes within the scope. **Always** be mindful of this when creating routes within a scope to avoid duplicate module prefixes.
-
-- You **never** need to create your own `alias` for route definitions! The `scope` provides the alias, ie:
-
-      scope "/admin", AppWeb.Admin do
-        pipe_through :browser
-
-        live "/users", UserLive, :index
-      end
-
-  the UserLive route would point to the `AppWeb.Admin.UserLive` module
-
-- `Phoenix.View` no longer is needed or included with Phoenix, don't use it
-<!-- phoenix:phoenix-end -->
-
-
 <!-- phoenix:html-start -->
+## phoenix:html usage
 ## Phoenix HTML guidelines
 
 - Phoenix templates **always** use `~H` or .html.heex files (known as HEEx), **never** use `~E`
@@ -199,9 +149,10 @@ custom classes must fully style the input
         {if @invalid_block_construct do}
         {end}
       </div>
-<!-- phoenix:html-end -->
 
+<!-- phoenix:html-end -->
 <!-- phoenix:liveview-start -->
+## phoenix:liveview usage
 ## Phoenix LiveView guidelines
 
 - **Never** use the deprecated `live_redirect` and `live_patch` functions, instead **always** use the `<.link navigate={href}>` and  `<.link patch={href}>` in templates, and `push_navigate` and `push_patch` functions LiveViews
@@ -241,7 +192,7 @@ custom classes must fully style the input
 
       <div id="tasks" phx-update="stream">
         <div class="hidden only:block">No tasks yet</div>
-        <div :for={{id, task} <- @stream.tasks} id={id}>
+        <div :for={{id, task} <- @streams.tasks} id={id}>
           {task.name}
         </div>
       </div>
@@ -371,3 +322,87 @@ Where the server handled it via:
       document = LazyHTML.from_fragment(html)
       matches = LazyHTML.filter(document, "your-complex-selector")
       IO.inspect(matches, label: "Matches")
+
+### Form handling
+
+#### Creating a form from params
+
+If you want to create a form based on `handle_event` params:
+
+    def handle_event("submitted", params, socket) do
+      {:noreply, assign(socket, form: to_form(params))}
+    end
+
+When you pass a map to `to_form/1`, it assumes said map contains the form params, which are expected to have string keys.
+
+You can also specify a name to nest the params:
+
+    def handle_event("submitted", %{"user" => user_params}, socket) do
+      {:noreply, assign(socket, form: to_form(user_params, as: :user))}
+    end
+
+#### Creating a form from changesets
+
+When using changesets, the underlying data, form params, and errors are retrieved from it. The `:as` option is automatically computed too. E.g. if you have a user schema:
+
+    defmodule MyApp.Users.User do
+      use Ecto.Schema
+      ...
+    end
+
+And then you create a changeset that you pass to `to_form`:
+
+    %MyApp.Users.User{}
+    |> Ecto.Changeset.change()
+    |> to_form()
+
+Once the form is submitted, the params will be available under `%{"user" => user_params}`.
+
+In the template, the form form assign can be passed to the `<.form>` function component:
+
+    <.form for={@form} id="todo-form" phx-change="validate" phx-submit="save">
+      <.input field={@form[:field]} type="text" />
+    </.form>
+
+Always give the form an explicit, unique DOM ID, like `id="todo-form"`.
+
+#### Avoiding form errors
+
+**Always** use a form assigned via `to_form/2` in the LiveView, and the `<.input>` component in the template. In the template **always access forms this**:
+
+    <%!-- ALWAYS do this (valid) --%>
+    <.form for={@form} id="my-form">
+      <.input field={@form[:field]} type="text" />
+    </.form>
+
+And **never** do this:
+
+    <%!-- NEVER do this (invalid) --%>
+    <.form for={@changeset} id="my-form">
+      <.input field={@changeset[:field]} type="text" />
+    </.form>
+
+- You are FORBIDDEN from accessing the changeset in the template as it will cause errors
+- **Never** use `<.form let={f} ...>` in the template, instead **always use `<.form for={@form} ...>`**, then drive all form references from the form assign as in `@form[:field]`. The UI should **always** be driven by a `to_form/2` assigned in the LiveView module that is derived from a changeset
+
+<!-- phoenix:liveview-end -->
+<!-- phoenix:phoenix-start -->
+## phoenix:phoenix usage
+## Phoenix guidelines
+
+- Remember Phoenix router `scope` blocks include an optional alias which is prefixed for all routes within the scope. **Always** be mindful of this when creating routes within a scope to avoid duplicate module prefixes.
+
+- You **never** need to create your own `alias` for route definitions! The `scope` provides the alias, ie:
+
+      scope "/admin", AppWeb.Admin do
+        pipe_through :browser
+
+        live "/users", UserLive, :index
+      end
+
+  the UserLive route would point to the `AppWeb.Admin.UserLive` module
+
+- `Phoenix.View` no longer is needed or included with Phoenix, don't use it
+
+<!-- phoenix:phoenix-end -->
+<!-- usage-rules-end -->
