@@ -1,0 +1,60 @@
+services:
+  app:
+    build:
+      context: .devcontainer
+      dockerfile: Dockerfile
+      args:
+        TZ: "${TZ:-America/Los_Angeles}"
+        ZSH_IN_DOCKER_VERSION: "${ZSH_IN_DOCKER_VERSION:-1.2.1}"
+        INSTALL_TIDEWAVE: "${INSTALL_TIDEWAVE:-true}"
+    container_name: doggo-app
+    ports:
+      - "4000:4000"
+      - "9833:9832"
+    volumes:
+      - .:/workspace:cached
+      - .claude:/home/dev/.claude:cached
+      - ~/.gitconfig:/home/dev/.gitconfig:cached
+      - node_modules:/workspace/assets/node_modules
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=doggo_dev
+      - MIX_BUILD_PATH=/workspace/_build/devcontainer
+      - MIX_DEPS_PATH=/workspace/deps/devcontainer
+      - CLAUDE_CONFIG_DIR=/home/dev/.claude
+    working_dir: /workspace
+    command: sleep infinity
+    depends_on:
+      - db
+    networks:
+      - doggo-network
+
+  db:
+    image: postgres:15-alpine
+    container_name: doggo-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=doggo_dev
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - doggo-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  node_modules:
+
+networks:
+  doggo-network:
+    driver: bridge

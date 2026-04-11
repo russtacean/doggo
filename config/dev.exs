@@ -5,7 +5,7 @@ config :ash, policies: [show_policy_breakdowns?: true]
 config :doggo, Doggo.Repo,
   username: "postgres",
   password: "postgres",
-  hostname: "localhost",
+  hostname: System.get_env("DATABASE_HOST", "localhost"),
   database: "doggo_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
@@ -18,9 +18,8 @@ config :doggo, Doggo.Repo,
 # watchers to your application. For example, we can use it
 # to bundle .js and .css sources.
 config :doggo, DoggoWeb.Endpoint,
-  # Binding to loopback ipv4 address prevents access from other machines.
-  # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}],
+  # Bind to 0.0.0.0 to allow access from outside the container (e.g., host browser)
+  http: [ip: {0, 0, 0, 0}],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,

@@ -1,0 +1,23 @@
+{
+  "name": "KSC Dev",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  // Project-specific environment variables (refreshed on each restart)
+  "remoteEnv": {
+    "SOME_SECRET_ENV_TOKEN": "${localEnv:SOME_SECRET_ENV_TOKEN}",
+  },
+  // Default configuration (baked in at container creation)
+  "containerEnv": {
+    "CLAUDE_CONFIG_DIR": "/home/dev/.claude",
+    "POWERLEVEL9K_DISABLE_GITSTATUS": "false",
+    // Separate _build and deps from the host to avoid compile lock conflicts
+    // and platform mismatch (macOS host vs Linux container).
+    "MIX_BUILD_PATH": "/workspace/_build/devcontainer",
+    "MIX_DEPS_PATH": "/workspace/deps/devcontainer",
+  },
+  "initializeCommand": "mkdir -p .claude",
+  "remoteUser": "dev",
+  "postStartCommand": "sudo /usr/local/bin/init-firewall.sh && sudo bash /workspace/.devcontainer/setup/init-file-protection.sh",
+  "waitFor": "postStartCommand",
+}
