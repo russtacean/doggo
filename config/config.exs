@@ -19,7 +19,8 @@ config :ash,
   bulk_actions_default_to_errors?: true,
   transaction_rollback_on_error?: true,
   redact_sensitive_values_in_errors?: true,
-  known_types: [AshPostgres.Timestamptz, AshPostgres.TimestamptzUsec]
+  known_types: [AshPostgres.Timestamptz, AshPostgres.TimestamptzUsec],
+  custom_types: [enclosure_status: Doggo.Shelter.EnclosureStatus]
 
 config :spark,
   formatter: [
@@ -51,7 +52,8 @@ config :spark,
 
 config :doggo,
   ecto_repos: [Doggo.Repo],
-  generators: [timestamp_type: :utc_datetime]
+  generators: [timestamp_type: :utc_datetime],
+  ash_domains: [Doggo.Shelter]
 
 # Configure the endpoint
 config :doggo, DoggoWeb.Endpoint,
