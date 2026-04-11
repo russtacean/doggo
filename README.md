@@ -8,6 +8,7 @@ The easiest way to get started is using Docker Compose, which includes both the 
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running
 - Docker Compose (included with Docker Desktop)
+- VSCode or Cursor with the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) (optional, for integrated editor support)
 
 ### Start the Development Environment
 
@@ -51,6 +52,21 @@ mix phx.server
 ```
 
 The database data persists in a Docker volume across container restarts.
+
+### Using VSCode/Cursor (Alternative)
+
+If you prefer an integrated IDE experience instead of the terminal:
+
+1. Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) in VSCode/Cursor
+2. Open the project folder in VSCode/Cursor
+3. Click the prompt to "Reopen in Container" (or use Command Palette: `Dev Containers: Reopen in Container`)
+4. The editor will automatically:
+   - Build and start the containers
+   - Install recommended extensions (ElixirLS, Tailwind CSS, etc.)
+   - Forward ports 4000 (Phoenix) and 5432 (PostgreSQL)
+   - Set up the terminal and formatting
+
+Once loaded, open a terminal in VSCode/Cursor and run `mix setup && mix phx.server`.
 
 ### Troubleshooting
 

@@ -1,5 +1,5 @@
 {
-  "name": "KSC Dev",
+  "name": "Doggo Dev",
   "dockerComposeFile": ["../docker-compose.yml"],
   "service": "app",
   "workspaceFolder": "/workspace",
@@ -20,4 +20,64 @@
   "remoteUser": "dev",
   "postStartCommand": "sudo /usr/local/bin/init-firewall.sh && sudo bash /workspace/.devcontainer/setup/init-file-protection.sh",
   "waitFor": "postStartCommand",
+
+  // VSCode/Cursor editor configuration
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "jakebecker.elixir-ls",
+        "phoenixframework.phoenix",
+        "bradlc.vscode-tailwindcss",
+        "eamodio.gitlens",
+        "github.copilot",
+        "editorconfig.editorconfig"
+      ],
+      "settings": {
+        // Elixir settings
+        "elixirLS.dialyzerEnabled": false,
+        "elixirLS.suggestSpecs": true,
+        "elixirLS.signatureHelpEnabled": true,
+        "[elixir]": {
+          "editor.defaultFormatter": "JakeBecker.elixir-ls",
+          "editor.formatOnSave": true,
+          "editor.tabSize": 2,
+          "editor.insertSpaces": true
+        },
+        "[heex]": {
+          "editor.defaultFormatter": "JakeBecker.elixir-ls",
+          "editor.formatOnSave": true,
+          "editor.tabSize": 2
+        },
+        // Phoenix settings
+        "tailwindCSS.includeLanguages": {
+          "elixir": "html",
+          "heex": "html"
+        },
+        "emmet.includeLanguages": {
+          "elixir": "html",
+          "heex": "html"
+        },
+        // Terminal settings
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "zsh": {
+            "path": "/bin/zsh"
+          }
+        }
+      }
+    }
+  },
+
+  // Forward ports to the host
+  "forwardPorts": [4000, 5432],
+  "portsAttributes": {
+    "4000": {
+      "label": "Phoenix Server",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL",
+      "onAutoForward": "silent"
+    }
+  }
 }
