@@ -65,6 +65,12 @@ defmodule Doggo.MixProject do
       {:gettext, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.2.0"},
+      {:ash, "~> 3.23"},
+      {:ash_postgres, "~> 2.8"},
+      {:ash_phoenix, "~> 2.3"},
+      {:usage_rules, "~> 1.2"},
+      {:ash_admin, "~> 0.14.0"},
+      {:salad_ui, "~> 0.14.9"},
       {:bandit, "~> 1.5"}
     ]
   end
