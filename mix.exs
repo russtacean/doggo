@@ -21,9 +21,7 @@ defmodule Doggo.MixProject do
     # Configured for Claude since Cursor will pick up CLAUDE.md and detect Claude skills/agents
     [
       file: "CLAUDE.md",
-      usage_rules: [
-        "phoenix:all"
-      ],
+      usage_rules: [],
       skills: [
         location: ".claude/skills",
         build: [
@@ -33,6 +31,13 @@ defmodule Doggo.MixProject do
                 "actions, or any Ash extensions. Always consult this when making any " <>
                 "domain/resource changes, features, or fixes.",
             usage_rules: [:ash, ~r/^ash_/, :spark]
+          ],
+          "phoenix-framework": [
+            description:
+              "Use this skill when working with Phoenix, LiveView, HEEx templates, " <>
+                "Ecto, forms, or any web layer code. Always consult this when building " <>
+                "features that involve routes, controllers, views, or templates.",
+            usage_rules: [:phoenix, ~r/^phoenix_/]
           ]
         ]
       ]
