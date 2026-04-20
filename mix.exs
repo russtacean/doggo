@@ -101,7 +101,7 @@ defmodule Doggo.MixProject do
       {:usage_rules, "~> 1.0", only: [:dev]},
       {:ash_admin, "~> 0.14"},
       {:igniter, "~> 0.7.7", only: [:dev, :test]},
-      {:salad_ui, "~> 0.14.9"},
+      {:petal_components, "~> 3.2.0"},
       {:bandit, "~> 1.5"}
     ]
   end

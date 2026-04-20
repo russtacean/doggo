@@ -87,6 +87,9 @@ defmodule DoggoWeb do
       # Core UI components
       import DoggoWeb.CoreComponents
 
+      # Petal Components - imports all components
+      use PetalComponents
+
       # Common modules used in templates
       alias Phoenix.LiveView.JS
       alias DoggoWeb.Layouts
