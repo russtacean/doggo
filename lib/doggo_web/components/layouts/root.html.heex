@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="scrollbar-gutter: stable;">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,30 +7,78 @@
     <.live_title default="Doggo" suffix=" · Phoenix Framework">
       {assigns[:page_title]}
     </.live_title>
-    <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
-    <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
-    </script>
+
+    <%!-- Theme script must run before CSS to prevent flash --%>
     <script>
       (() => {
-        const setTheme = (theme) => {
-          if (theme === "system") {
-            localStorage.removeItem("phx:theme");
-            document.documentElement.removeAttribute("data-theme");
-          } else {
-            localStorage.setItem("phx:theme", theme);
-            document.documentElement.setAttribute("data-theme", theme);
+        const updateIndicator = (theme) => {
+          const indicator = document.getElementById("theme-indicator");
+          if (indicator) {
+            indicator.setAttribute("data-theme", theme);
+            // Position indicator: system=left, light=center, dark=right
+            if (theme === "system") {
+              indicator.style.left = "0.25rem";
+            } else if (theme === "light") {
+              indicator.style.left = "33.33%";
+            } else if (theme === "dark") {
+              indicator.style.left = "66.66%";
+            }
           }
         };
-        if (!document.documentElement.hasAttribute("data-theme")) {
-          setTheme(localStorage.getItem("phx:theme") || "system");
+
+        const setTheme = (theme) => {
+          updateIndicator(theme);
+          if (theme === "system") {
+            localStorage.removeItem("phx:theme");
+            const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            if (systemDark) {
+              document.documentElement.classList.add("dark");
+            } else {
+              document.documentElement.classList.remove("dark");
+            }
+          } else if (theme === "dark") {
+            localStorage.setItem("phx:theme", "dark");
+            document.documentElement.classList.add("dark");
+          } else {
+            localStorage.setItem("phx:theme", "light");
+            document.documentElement.classList.remove("dark");
+          }
+        };
+
+        // Initialize theme on load
+        if (!localStorage.getItem("phx:theme")) {
+          setTheme("system");
+        } else {
+          setTheme(localStorage.getItem("phx:theme"));
         }
-        window.addEventListener("storage", (e) => e.key === "phx:theme" && setTheme(e.newValue || "system"));
-        
-        window.addEventListener("phx:set-theme", (e) => setTheme(e.target.dataset.phxTheme));
+
+        // Listen for storage changes (other tabs)
+        window.addEventListener("storage", (e) => {
+          if (e.key === "phx:theme") {
+            setTheme(e.newValue || "system");
+          }
+        });
+
+        // Listen for theme change events from LiveView
+        window.addEventListener("phx:set-theme", (e) => {
+          const theme = e.detail?.theme || "system";
+          setTheme(theme);
+        });
       })();
     </script>
+
+    <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
+
+    <%!-- Alpine.js collapse plugin must load before Alpine --%>
+    <script defer src="https://unpkg.com/@alpinejs/collapse@3.14.3/dist/cdn.min.js">
+    </script>
+    <script defer src="https://unpkg.com/alpinejs@3.14.3/dist/cdn.min.js">
+    </script>
+
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
+    </script>
   </head>
-  <body>
+  <body class="antialiased bg-white dark:bg-gray-900">
     {@inner_content}
   </body>
 </html>
