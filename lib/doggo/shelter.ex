@@ -1,6 +1,7 @@
 defmodule Doggo.Shelter do
   use Ash.Domain,
-    otp_app: :doggo
+    otp_app: :doggo,
+    extensions: [AshPhoenix]
 
   resources do
     resource Doggo.Shelter.Location do

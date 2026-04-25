@@ -9,6 +9,7 @@
 
 @import "../../deps/petal_components/assets/default.css";
 @import "./colors.css";
+@import "./semantic.css";
 
 /* A Tailwind plugin that makes "hero-#{ICON}" classes available.
    The heroicons installation itself is managed by your mix.exs */

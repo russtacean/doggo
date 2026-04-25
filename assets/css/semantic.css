@@ -1,0 +1,66 @@
+@theme inline {
+    /* ===== SURFACES ===== */
+    --color-surface: var(--color-white);
+    --color-surface-dark: var(--color-gray-800);
+    --color-surface-inset: var(--color-gray-50);
+    --color-surface-inset-dark: var(--color-gray-900);
+
+    /* ===== BORDERS ===== */
+    --color-border-default: var(--color-gray-200);
+    --color-border-default-dark: var(--color-gray-700);
+    --color-border-accent: var(--color-primary-300);
+    --color-border-accent-dark: var(--color-primary-700);
+    --color-border-divider: var(--color-gray-100);
+    --color-border-divider-dark: var(--color-gray-700);
+
+    /* ===== TEXT ===== */
+    --color-text-primary: var(--color-gray-900);
+    --color-text-primary-dark: var(--color-gray-100);
+    --color-text-secondary: var(--color-gray-500);
+    --color-text-secondary-dark: var(--color-gray-400);
+
+    /* ===== FUNCTIONAL TEXT ===== */
+    --color-text-danger: var(--color-danger-600);
+    --color-text-danger-dark: var(--color-danger-400);
+
+    /* ===== ICONS ===== */
+    --color-icon: var(--color-gray-400);
+    --color-icon-dark: var(--color-gray-500);
+
+    /* ===== SHADOWS ===== */
+    --shadow-card-hover: var(--shadow-lg);
+
+    /* ===== ADDITIONAL SURFACES ===== */
+    --color-surface-accent: var(--color-primary-100);
+    --color-surface-accent-dark: var(--color-primary-900);
+    --color-surface-input: var(--color-white);
+    --color-surface-input-dark: var(--color-gray-900);
+    --color-surface-hover: var(--color-gray-100);
+    --color-surface-hover-dark: var(--color-gray-700);
+
+    /* ===== ADDITIONAL SHADOWS ===== */
+    --shadow-modal: var(--shadow-xl);
+
+    /* Role names: map to the default Tailwind v4 scale via `calc(var(--spacing) * n)`.
+       This theme only defines the unit `--spacing` (0.25rem), not per-step names like
+       `--spacing-6`, so do not use `var(--spacing-n)` in token values. */
+    /* ===== SPACING ===== */
+    --spacing-stack-tight: calc(var(--spacing) * 4);
+    --spacing-stack-section: calc(var(--spacing) * 6);
+    --spacing-stack-form: calc(var(--spacing) * 5);
+    --spacing-inline: calc(var(--spacing) * 3);
+    --spacing-actions: calc(var(--spacing) * 2);
+    --spacing-field: calc(var(--spacing) * 4);
+    --spacing-inset-card: calc(var(--spacing) * 4);
+    --spacing-inset-card-lg: calc(var(--spacing) * 6);
+    --spacing-inset-icon: calc(var(--spacing) * 2);
+    --spacing-card-block-end: calc(var(--spacing) * 3);
+    --spacing-separator-tight: calc(var(--spacing) * 3);
+    --spacing-separator-comfort: calc(var(--spacing) * 4);
+    --spacing-section-header: calc(var(--spacing) * 6);
+    --spacing-header-rule: calc(var(--spacing) * 4);
+    --spacing-empty-state: calc(var(--spacing) * 12);
+    --spacing-empty-prose: calc(var(--spacing) * 1);
+    --spacing-empty-cta: calc(var(--spacing) * 4);
+    --spacing-block-actions: calc(var(--spacing) * 6);
+}

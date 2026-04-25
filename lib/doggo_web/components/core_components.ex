@@ -23,7 +23,9 @@ defmodule DoggoWeb.CoreComponents do
   use Gettext, backend: DoggoWeb.Gettext
 
   import PetalComponents.Alert
+  import PetalComponents.Button
   import PetalComponents.Icon
+  import PetalComponents.Modal
 
   alias Phoenix.LiveView.JS
 
@@ -89,10 +91,10 @@ defmodule DoggoWeb.CoreComponents do
     ~H"""
     <header class={[@actions != [] && "flex items-center justify-between gap-6", "pb-4"]}>
       <div>
-        <h1 class="text-lg font-semibold leading-8 text-gray-900 dark:text-gray-100">
+        <h1 class="text-lg font-semibold leading-8 text-text-primary dark:text-text-primary-dark">
           {render_slot(@inner_block)}
         </h1>
-        <p :if={@subtitle != []} class="text-sm text-gray-600 dark:text-gray-400">
+        <p :if={@subtitle != []} class="text-sm text-text-secondary dark:text-text-secondary-dark">
           {render_slot(@subtitle)}
         </p>
       </div>
@@ -108,7 +110,7 @@ defmodule DoggoWeb.CoreComponents do
 
   def error(assigns) do
     ~H"""
-    <p class="flex gap-3 mt-3 text-sm leading-6 text-red-600 dark:text-red-400">
+    <p class="flex gap-3 mt-3 text-sm leading-6 text-text-danger dark:text-text-danger-dark">
       <.icon name="hero-exclamation-circle-mini" class="mt-0.5 h-5 w-5 flex-none" />
       {render_slot(@inner_block)}
     </p>
@@ -131,47 +133,115 @@ defmodule DoggoWeb.CoreComponents do
 
   def list(assigns) do
     ~H"""
-    <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+    <ul class="divide-y divide-border-divider dark:divide-border-divider-dark">
       <li :for={item <- @item} class="py-4">
-        <div class="font-medium text-gray-900 dark:text-gray-100">{item.title}</div>
-        <div class="text-gray-600 dark:text-gray-400">{render_slot(item)}</div>
+        <div class="font-medium text-text-primary dark:text-text-primary-dark">{item.title}</div>
+        <div class="text-text-secondary dark:text-text-secondary-dark">{render_slot(item)}</div>
       </li>
     </ul>
     """
   end
 
+  @doc """
+  Renders a card container with consistent surface, border, and hover styles.
+
+  ## Examples
+
+      <.card class="p-4">
+        <p>Card content</p>
+      </.card>
+  """
+  attr :class, :string, default: nil, doc: "additional Tailwind classes"
+  slot :inner_block, required: true
+
+  def surface_card(assigns) do
+    ~H"""
+    <div class={[
+      "bg-surface dark:bg-surface-dark border border-border-default dark:border-border-default-dark",
+      "rounded-lg shadow-sm hover:shadow-card-hover hover:border-border-accent dark:hover:border-border-accent-dark",
+      "transition-all duration-200",
+      @class
+    ]}>
+      {render_slot(@inner_block)}
+    </div>
+    """
+  end
+
+  @doc """
+  Renders a back navigation button with an arrow icon.
+
+  ## Examples
+
+      <.back_button to={~p"/locations"} />
+  """
+  attr :to, :string, required: true
+  attr :size, :string, default: "sm"
+  attr :rest, :global
+
+  def back_button(assigns) do
+    ~H"""
+    <.button
+      color="gray"
+      variant="ghost"
+      size={@size}
+      to={@to}
+      link_type="live_redirect"
+      aria-label={gettext("Back")}
+      {@rest}
+    >
+      <.icon name="hero-arrow-left" class="w-5 h-5" />
+    </.button>
+    """
+  end
+
+  @doc """
+  Renders a Petal modal to confirm destructive delete actions.
+
+  Expects a LiveView handler for `confirm_event`. Open the modal from the template
+  with `show_modal/1` using the same `id` (default `"delete-confirm"`).
+
+  ## Examples
+
+      <.delete_confirm_modal
+        title={gettext("Delete Location")}
+        confirm_value={%{id: location.id}}
+      >
+        <p class="text-text-secondary dark:text-text-secondary-dark">{gettext("Are you sure?")}</p>
+      </.delete_confirm_modal>
+  """
+  attr :id, :string, default: "delete-confirm"
+  attr :title, :string, required: true
+  attr :confirm_event, :string, default: "confirm_delete"
+  attr :confirm_value, :map, default: %{}
+
+  slot :inner_block, required: true
+
+  def delete_confirm_modal(assigns) do
+    ~H"""
+    <.modal id={@id} hide title={@title} on_cancel={%JS{}}>
+      {render_slot(@inner_block)}
+      <div class="flex items-center justify-end gap-actions mt-block-actions">
+        <.button
+          color="gray"
+          variant="outline"
+          type="button"
+          phx-click={JS.exec("data-cancel", to: "##{@id}")}
+        >
+          Cancel
+        </.button>
+        <.button
+          color="danger"
+          type="button"
+          phx-click={JS.push(@confirm_event, value: @confirm_value)}
+        >
+          <.icon name="hero-trash" class="w-4 h-4 mr-1" /> {gettext("Delete")}
+        </.button>
+      </div>
+    </.modal>
+    """
+  end
+
   ## JS Commands
-
-  @doc """
-  Shows a modal with the given id.
-  """
-  def show_modal(js \\ %JS{}, id) do
-    js
-    |> JS.show(to: "##{id}")
-    |> JS.show(
-      to: "##{id}-bg",
-      time: 300,
-      transition: {"transition-all transform ease-out duration-300", "opacity-0", "opacity-100"}
-    )
-    |> show("##{id}-container")
-    |> JS.add_class("overflow-hidden", to: "body")
-  end
-
-  @doc """
-  Hides a modal with the given id.
-  """
-  def hide_modal(js \\ %JS{}, id) do
-    js
-    |> JS.hide(
-      to: "##{id}-bg",
-      transition: {"transition-all transform ease-in duration-200", "opacity-100", "opacity-0"}
-    )
-    |> hide("##{id}-container")
-    |> JS.hide(to: "##{id}", time: 200)
-    |> JS.remove_class("overflow-hidden", to: "body")
-    |> JS.pop_focus()
-  end
-
   def show(js \\ %JS{}, selector) do
     JS.show(js,
       to: selector,

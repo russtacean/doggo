@@ -75,6 +75,11 @@ defmodule Doggo.Shelter.Location do
   relationships do
     has_many :enclosures, Doggo.Shelter.Enclosure
     has_many :scheduled_shifts, Doggo.Shelter.ScheduledShift
+    has_many :recurring_shifts, Doggo.Shelter.RecurringShift
+  end
+
+  calculations do
+    calculate :formatted_address, :string, Doggo.Shelter.Location.FormattedAddress
   end
 
   aggregates do
