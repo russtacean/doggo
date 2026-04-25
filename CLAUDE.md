@@ -29,5 +29,14 @@ Doggo is intended to be an open source project to build a webapp for dog shelter
 - Favor integration style tests over unit tests, as they allow for easier refactoring
 - You **MUST** run `mix precommit` before considering any task done, fix any compilation errors or test failures before considering the task complete
 
+## Interval Conventions
+All time and date intervals in the app use an **inclusive start, exclusive end** convention:
+- `start_time` is the first moment the interval is active.
+- `end_time` is the first moment the interval is no longer active.
+- `start_date` is the first date the pattern is active (inclusive).
+- `end_date` is the first date the pattern is no longer active (exclusive).
+
+This allows adjacent intervals to share the same boundary (e.g. a shift ending at 12:00 and the next shift starting at 12:00) without overlap.
+
 ## Design/UX
 This is a webapp that will be most heavily used on mobile phones, as volunteers will likely not have a laptop readily available at the shelter, so **mobile-first** design is a key consideration
