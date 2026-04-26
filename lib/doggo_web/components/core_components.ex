@@ -89,16 +89,19 @@ defmodule DoggoWeb.CoreComponents do
 
   def header(assigns) do
     ~H"""
-    <header class={[@actions != [] && "flex items-center justify-between gap-6", "pb-4"]}>
-      <div>
-        <h1 class="text-lg font-semibold leading-8 text-text-primary dark:text-text-primary-dark">
+    <header class={[
+      @actions != [] && "flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6",
+      "pb-4"
+    ]}>
+      <div class="min-w-0">
+        <h1 class="min-w-0 text-lg font-semibold leading-8 text-text-primary dark:text-text-primary-dark">
           {render_slot(@inner_block)}
         </h1>
         <p :if={@subtitle != []} class="text-sm text-text-secondary dark:text-text-secondary-dark">
           {render_slot(@subtitle)}
         </p>
       </div>
-      <div class="flex-none">{render_slot(@actions)}</div>
+      <div :if={@actions != []} class="w-full sm:w-auto sm:flex-none">{render_slot(@actions)}</div>
     </header>
     """
   end

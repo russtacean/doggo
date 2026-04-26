@@ -9,9 +9,11 @@ defmodule DoggoWeb.EnclosureLive.Index do
     ~H"""
     <Layouts.app flash={@flash}>
       <.header>
-        <div class="flex items-center gap-inline">
+        <div class="flex min-w-0 items-center gap-inline">
           <.back_button to={~p"/locations/#{@location}"} />
-          <span class="text-text-primary dark:text-text-primary-dark">Enclosures</span>
+          <span class="min-w-0 truncate text-text-primary dark:text-text-primary-dark">
+            Enclosures
+          </span>
         </div>
         <:subtitle>Manage enclosure availability for {@location.name}</:subtitle>
         <:actions>
@@ -19,6 +21,7 @@ defmodule DoggoWeb.EnclosureLive.Index do
             color="primary"
             to={~p"/locations/#{@location}/enclosures/new"}
             link_type="live_redirect"
+            class="w-full justify-center sm:w-auto"
           >
             <.icon name="hero-plus" class="w-4 h-4 mr-1" /> New Enclosure
           </.button>
@@ -60,9 +63,6 @@ defmodule DoggoWeb.EnclosureLive.Index do
                   >
                     {enclosure.name}
                   </.link>
-                  <p class="text-sm text-text-secondary dark:text-text-secondary-dark truncate">
-                    {@location.name}
-                  </p>
                 </div>
               </div>
               <div class="self-start sm:self-center shrink-0">
@@ -72,11 +72,7 @@ defmodule DoggoWeb.EnclosureLive.Index do
               </div>
             </div>
 
-            <div class="flex items-center justify-between pt-separator-tight border-t border-border-divider dark:border-border-divider-dark">
-              <div class="flex items-center gap-actions text-sm text-text-secondary dark:text-text-secondary-dark">
-                <.icon name="hero-map-pin" class="w-4 h-4" />
-                <span>{@location.name}</span>
-              </div>
+            <div class="flex justify-end pt-separator-tight border-t border-border-divider dark:border-border-divider-dark">
               <div class="flex items-center gap-actions">
                 <.button
                   color="gray"

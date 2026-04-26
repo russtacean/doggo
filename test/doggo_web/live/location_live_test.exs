@@ -23,6 +23,7 @@ defmodule DoggoWeb.LocationLiveTest do
       assert has_element?(view, "#locations-#{location.id} a", "Main Shelter")
       assert has_element?(view, "span", "Portland, OR")
       assert has_element?(view, ".pc-badge", location.timezone)
+      assert has_element?(view, "header a[href=\"#{~p"/locations/new"}\"]", "New Location")
     end
 
     test "does not render archived locations", %{conn: conn} do
@@ -85,7 +86,7 @@ defmodule DoggoWeb.LocationLiveTest do
       assert has_element?(view, "#delete-confirm-#{location.id}")
       assert has_element?(view, "#delete-confirm-#{location.id}", "enclosures")
       assert has_element?(view, "#delete-confirm-#{location.id}", "scheduled shifts")
-      assert has_element?(view, "#delete-confirm-#{location.id}", "recurring shifts")
+      assert has_element?(view, "#delete-confirm-#{location.id}", "weekly patterns")
     end
 
     test "does not delete a location until confirmed", %{conn: conn} do
@@ -156,6 +157,24 @@ defmodule DoggoWeb.LocationLiveTest do
       assert has_element?(view, "p", "123 Main St")
       assert has_element?(view, "p", "Portland")
       assert has_element?(view, "p", "OR")
+
+      assert has_element?(
+               view,
+               "header a[href=\"#{~p"/locations/#{location.id}/enclosures"}\"]",
+               "Enclosures"
+             )
+
+      assert has_element?(
+               view,
+               "header a[href=\"#{~p"/locations/#{location.id}/recurring_shifts"}\"]",
+               "Weekly patterns"
+             )
+
+      assert has_element?(
+               view,
+               "header a[href=\"#{~p"/locations/#{location.id}/edit?return_to=show"}\"]",
+               "Edit"
+             )
     end
 
     test "can navigate back to index via back button", %{conn: conn} do
@@ -194,6 +213,21 @@ defmodule DoggoWeb.LocationLiveTest do
       assert_redirected(view, ~p"/locations/#{location.id}/enclosures")
     end
 
+    test "can navigate to recurring shifts for location", %{conn: conn} do
+      location = generate(location())
+
+      {:ok, view, _html} = live(conn, ~p"/locations/#{location.id}")
+
+      view
+      |> element(
+        "a[href=\"#{~p"/locations/#{location.id}/recurring_shifts"}\"]",
+        "Weekly patterns"
+      )
+      |> render_click()
+
+      assert_redirected(view, ~p"/locations/#{location.id}/recurring_shifts")
+    end
+
     test "navigates with flash when location is missing", %{conn: conn} do
       missing_id = Ecto.UUID.generate()
 
@@ -224,7 +258,7 @@ defmodule DoggoWeb.LocationLiveTest do
       assert has_element?(view, "#delete-confirm")
       assert has_element?(view, "#delete-confirm", "enclosures")
       assert has_element?(view, "#delete-confirm", "scheduled shifts")
-      assert has_element?(view, "#delete-confirm", "recurring shifts")
+      assert has_element?(view, "#delete-confirm", "weekly patterns")
     end
 
     test "deleting a location cascades to scheduled_shifts", %{conn: conn} do

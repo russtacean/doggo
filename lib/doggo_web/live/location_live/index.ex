@@ -11,7 +11,12 @@ defmodule DoggoWeb.LocationLive.Index do
         Locations
         <:subtitle>Manage shelter locations and their facilities</:subtitle>
         <:actions>
-          <.button color="primary" to={~p"/locations/new"} link_type="live_redirect">
+          <.button
+            color="primary"
+            to={~p"/locations/new"}
+            link_type="live_redirect"
+            class="w-full justify-center sm:w-auto"
+          >
             <.icon name="hero-plus" class="w-4 h-4 mr-1" /> New Location
           </.button>
         </:actions>
@@ -71,12 +76,14 @@ defmodule DoggoWeb.LocationLive.Index do
             </div>
 
             <%!-- Card footer --%>
-            <div class="flex items-center justify-between pt-separator-tight border-t border-border-divider dark:border-border-divider-dark">
-              <div class="flex items-center gap-actions text-sm text-text-secondary dark:text-text-secondary-dark">
-                <.icon name="hero-map-pin" class="w-4 h-4" />
-                <span>{location.city || "No city"}, {location.region || "No region"}</span>
+            <div class="flex flex-col gap-actions pt-separator-tight border-t border-border-divider dark:border-border-divider-dark sm:flex-row sm:items-center sm:justify-between">
+              <div class="flex min-w-0 items-center gap-actions text-sm text-text-secondary dark:text-text-secondary-dark">
+                <.icon name="hero-map-pin" class="w-4 h-4 shrink-0" />
+                <span class="truncate">
+                  {location.city || "No city"}, {location.region || "No region"}
+                </span>
               </div>
-              <div class="flex items-center gap-actions">
+              <div class="flex items-center gap-actions self-end sm:self-auto">
                 <.button
                   color="gray"
                   variant="ghost"
@@ -108,7 +115,7 @@ defmodule DoggoWeb.LocationLive.Index do
             confirm_value={%{id: location.id}}
           >
             <p class="text-text-secondary dark:text-text-secondary-dark">
-              Deleting this location will also delete all associated enclosures, scheduled shifts, and recurring shifts. This action cannot be undone.
+              Deleting this location will also delete all associated enclosures, scheduled shifts, and weekly patterns. This action cannot be undone.
             </p>
           </.delete_confirm_modal>
         </div>

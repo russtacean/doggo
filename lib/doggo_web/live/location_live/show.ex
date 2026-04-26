@@ -8,25 +8,38 @@ defmodule DoggoWeb.LocationLive.Show do
     ~H"""
     <Layouts.app flash={@flash}>
       <.header>
-        <div class="flex items-center gap-inline">
+        <div class="flex min-w-0 items-center gap-inline">
           <.back_button to={~p"/locations"} />
-          <span class="text-text-primary dark:text-text-primary-dark">{@location.name}</span>
+          <span class="min-w-0 truncate text-text-primary dark:text-text-primary-dark">
+            {@location.name}
+          </span>
         </div>
         <:subtitle>Location details and information</:subtitle>
         <:actions>
-          <div class="flex items-center flex-wrap justify-end gap-actions">
+          <div class="grid grid-cols-1 gap-actions sm:flex sm:flex-wrap sm:items-center sm:justify-end">
             <.button
               color="white"
               variant="outline"
               to={~p"/locations/#{@location}/enclosures"}
               link_type="live_redirect"
+              class="w-full justify-center sm:w-auto"
             >
               <.icon name="hero-home-modern" class="w-4 h-4 mr-1" /> Enclosures
+            </.button>
+            <.button
+              color="white"
+              variant="outline"
+              to={~p"/locations/#{@location}/recurring_shifts"}
+              link_type="live_redirect"
+              class="w-full justify-center sm:w-auto"
+            >
+              <.icon name="hero-arrow-path" class="w-4 h-4 mr-1" /> Weekly patterns
             </.button>
             <.button
               color="primary"
               to={~p"/locations/#{@location}/edit?return_to=show"}
               link_type="live_redirect"
+              class="w-full justify-center sm:w-auto"
             >
               <.icon name="hero-pencil-square" class="w-4 h-4 mr-1" /> Edit
             </.button>
@@ -41,7 +54,7 @@ defmodule DoggoWeb.LocationLive.Show do
         confirm_value={%{id: @location.id}}
       >
         <p class="text-text-secondary dark:text-text-secondary-dark">
-          Deleting this location will also delete all associated enclosures, scheduled shifts, and recurring shifts. This action cannot be undone.
+          Deleting this location will also delete all associated enclosures, scheduled shifts, and weekly patterns. This action cannot be undone.
         </p>
       </.delete_confirm_modal>
 
@@ -56,8 +69,8 @@ defmodule DoggoWeb.LocationLive.Show do
                 class="w-6 h-6 text-text-accent dark:text-text-accent-dark"
               />
             </div>
-            <div>
-              <h2 class="text-lg font-semibold text-text-primary dark:text-text-primary-dark">
+            <div class="min-w-0">
+              <h2 class="wrap-break-word text-lg font-semibold text-text-primary dark:text-text-primary-dark">
                 {@location.name}
               </h2>
             </div>
@@ -146,6 +159,7 @@ defmodule DoggoWeb.LocationLive.Show do
             variant="outline"
             size="sm"
             phx-click={PetalComponents.Modal.show_modal("delete-confirm")}
+            class="w-full justify-center sm:w-auto"
           >
             <.icon name="hero-trash" class="w-4 h-4 mr-1" /> Delete
           </.button>

@@ -9,9 +9,11 @@ defmodule DoggoWeb.EnclosureLive.Show do
     ~H"""
     <Layouts.app flash={@flash}>
       <.header>
-        <div class="flex items-center gap-inline">
+        <div class="flex min-w-0 items-center gap-inline">
           <.back_button to={~p"/locations/#{@location}/enclosures"} />
-          <span class="text-text-primary dark:text-text-primary-dark">{@enclosure.name}</span>
+          <span class="min-w-0 truncate text-text-primary dark:text-text-primary-dark">
+            {@enclosure.name}
+          </span>
         </div>
         <:subtitle>Enclosure details for {@location.name}</:subtitle>
         <:actions>
@@ -19,6 +21,7 @@ defmodule DoggoWeb.EnclosureLive.Show do
             color="primary"
             to={~p"/locations/#{@location}/enclosures/#{@enclosure}/edit?return_to=show"}
             link_type="live_redirect"
+            class="w-full justify-center sm:w-auto"
           >
             <.icon name="hero-pencil-square" class="w-4 h-4 mr-1" /> Edit
           </.button>
@@ -44,8 +47,8 @@ defmodule DoggoWeb.EnclosureLive.Show do
                 class="w-6 h-6 text-text-accent dark:text-text-accent-dark"
               />
             </div>
-            <div>
-              <h2 class="text-lg font-semibold text-text-primary dark:text-text-primary-dark">
+            <div class="min-w-0">
+              <h2 class="wrap-break-word text-lg font-semibold text-text-primary dark:text-text-primary-dark">
                 {@enclosure.name}
               </h2>
             </div>
@@ -88,6 +91,7 @@ defmodule DoggoWeb.EnclosureLive.Show do
             variant="outline"
             size="sm"
             phx-click={PetalComponents.Modal.show_modal("delete-confirm")}
+            class="w-full justify-center sm:w-auto"
           >
             <.icon name="hero-trash" class="w-4 h-4 mr-1" /> Delete
           </.button>

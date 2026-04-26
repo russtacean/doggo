@@ -28,6 +28,11 @@ defmodule DoggoWeb.Router do
     live "/locations/:location_id/enclosures/:id/edit", EnclosureLive.Form, :edit
     live "/locations/:location_id/enclosures/:id", EnclosureLive.Show, :show
 
+    live "/locations/:location_id/recurring_shifts", RecurringShiftLive.Index, :index
+    live "/locations/:location_id/recurring_shifts/new", RecurringShiftLive.Form, :new
+    live "/locations/:location_id/recurring_shifts/:id/edit", RecurringShiftLive.Form, :edit
+    live "/locations/:location_id/recurring_shifts/:id", RecurringShiftLive.Show, :show
+
     live "/locations/:id", LocationLive.Show, :show
   end
 
