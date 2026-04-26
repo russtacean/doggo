@@ -18,6 +18,17 @@ defmodule Doggo.TestGenerators do
     )
   end
 
+  def enclosure(opts \\ []) do
+    changeset_generator(
+      Doggo.Shelter.Enclosure,
+      :create,
+      defaults: [
+        name: "Test Enclosure #{System.unique_integer([:positive])}"
+      ],
+      overrides: opts
+    )
+  end
+
   def scheduled_shift(opts \\ []) do
     unique_int = System.unique_integer([:positive])
     date = Date.add(~D[2026-04-15], unique_int)

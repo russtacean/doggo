@@ -9,20 +9,20 @@ Doggo is intended to be an open source project to build a webapp for dog shelter
 - This project uses Elixir and relies heavily on Phoenix LiveView and Ash Framework.
 - We use [Petal Components](https://petal.build/components) `petal_components` for styled LiveView components. Use the component-function approach (`<.button>`, `<.alert>`, `<.badge>`, `<.field>`) in templates.
 
-## Petal Components Usage
-- **Button**: `<.button color="primary" variant="solid">Label</.button>`
-  - Colors: primary, secondary, info, success, warning, danger, gray
-  - Variants: solid, light, outline, inverted, shadow, ghost
-  - Sizes: xs, sm, md, lg, xl
-- **Alert**: `<.alert color="info" variant="soft" with_icon>message</.alert>`
-  - Colors: info, success, warning, danger
-  - Variants: light, soft, dark, outline
-- **Badge**: `<.badge color="warning" size="sm">label</.badge>`
-- **Field**: For form inputs, use `<.field type="text" label="Name" field={@form[:name]} />`
+See the `phoenix-framework` skill for Phoenix/LiveView patterns (streams, forms, navigation) as needed
+See the `ash-framework` skill for domain + resource patterns as needed.
 
-## Dark Mode
-- Use Tailwind's `dark:` variant (e.g., `dark:bg-gray-800`)
-- Add/remove `dark` class on `<html>` element for class-based dark mode
+
+## Design/UX
+This is a webapp that will be most heavily used on mobile phones, as volunteers will likely not have a laptop readily available at the shelter, so **mobile-first** design is a key consideration
+
+### Design Tokens
+We use semantic design tokens for colors, spacing, and shadows. See `assets/css/semantic.css` for available tokens.
+
+### Micro-interactions
+- Card hover: `hover:shadow-card-hover hover:border-border-accent transition-all duration-200`
+- Button active: `active:scale-95` (built into Petal)
+- Action visibility: Show edit/delete on hover with `opacity-100 sm:opacity-0 sm:group-hover:opacity-100` (always visible on mobile, hover-only on desktop)
 
 # Contributing to the repository
 - Whenever you make changes, use red-green TDD to validate your changes
@@ -38,6 +38,3 @@ All time and date intervals in the app use an **inclusive start, exclusive end**
 - `end_date` is the first date the pattern is no longer active (exclusive).
 
 This allows adjacent intervals to share the same boundary (e.g. a shift ending at 12:00 and the next shift starting at 12:00) without overlap.
-
-## Design/UX
-This is a webapp that will be most heavily used on mobile phones, as volunteers will likely not have a laptop readily available at the shelter, so **mobile-first** design is a key consideration
