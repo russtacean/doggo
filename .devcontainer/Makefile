@@ -1,4 +1,4 @@
-.PHONY: list dc.up dc.status dc.stop dc.rebuild dc.down dc.shell dc.claude dc.tidewave dc.tidewave.bg dc.tidewave.stop dc.logs.proxy dc.server dc.test dc.worktree.new dc.worktree.list dc.worktree.remove
+.PHONY: list dc.up dc.status dc.stop dc.rebuild dc.down dc.shell dc.deps dc.claude dc.tidewave dc.tidewave.bg dc.tidewave.stop dc.logs.proxy dc.server dc.test dc.worktree.new dc.worktree.list dc.worktree.remove
 
 define require_devcontainer
 	@if [ "$$DEVCONTAINER" != "true" ]; then echo "Error: This command must be run inside the devcontainer." >&2; exit 1; fi
@@ -15,6 +15,7 @@ list:
 		"make dc.rebuild"        "Rebuild and start containers" \
 		"make dc.down"           "Stop and remove containers (wipes data)" \
 		"make dc.shell"          "Open a shell inside the app container" \
+		"make dc.deps"           "Fetch Hex deps (run after mix.lock changes, e.g. git pull)" \
 		"make dc.logs"           "View all container logs" \
 		"" "" \
 		"# Commands to run inside the devcontainer" "" \
@@ -53,6 +54,9 @@ dc.down:
 
 dc.shell:
 	docker-compose exec app zsh
+
+dc.deps:
+	docker-compose exec app mix deps.get
 
 dc.logs:
 	docker-compose logs -f

@@ -28,6 +28,7 @@ Doggo is intended to be an open source project to build a webapp for dog shelter
 - Whenever you make changes, use red-green TDD to validate your changes
 - Favor integration style tests over unit tests, as they allow for easier refactoring
 - You **MUST** run `mix precommit` before considering any task done, fix any compilation errors or test failures before considering the task complete
+- If you use the Docker dev workflow (`make dc.up`, etc.), after pulling changes that touch `mix.lock` run `make dc.deps` (with the app container up) so Hex dependencies are fetched into `deps/devcontainer` — project deps are not baked into the image
 
 ## Interval Conventions
 All time and date intervals in the app use an **inclusive start, exclusive end** convention:

@@ -35,6 +35,7 @@ Visit [`localhost:4000`](http://localhost:4000) in your browser.
 | `make dc.down` | Stop and remove containers (wipes data) |
 | `make dc.rebuild` | Rebuild and restart containers |
 | `make dc.shell` | Open a shell inside the app container |
+| `make dc.deps` | Fetch Hex dependencies (run after `git pull` when `mix.lock` changed) |
 | `make dc.logs` | View container logs |
 | `make list` | Show all available commands |
 
@@ -52,6 +53,8 @@ mix phx.server
 ```
 
 The database data persists in a Docker volume across container restarts.
+
+After you pull changes that update `mix.lock`, run `make dc.deps` (with containers up) so Hex dependencies are installed into the devcontainer’s `deps/devcontainer` path; rebuilding the image alone does not fetch new packages.
 
 ### Using VSCode/Cursor (Alternative)
 
@@ -78,6 +81,9 @@ docker-compose up -d
 
 **Database connection errors:**
 Ensure the database container is running: `docker ps` should show `doggo-db`
+
+**Missing or outdated Hex dependencies** (e.g. “dependency is not available” or errors right after `git pull`):
+With containers running, run `make dc.deps`. Do not run `mix deps.get` on the host without the same `MIX_DEPS_PATH` the container uses, or the app in Docker will still be missing packages.
 
 **Rebuild from scratch:**
 ```bash
