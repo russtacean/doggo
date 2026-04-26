@@ -14,13 +14,23 @@ defmodule DoggoWeb.LocationLive.Show do
         </div>
         <:subtitle>Location details and information</:subtitle>
         <:actions>
-          <.button
-            color="primary"
-            to={~p"/locations/#{@location}/edit?return_to=show"}
-            link_type="live_redirect"
-          >
-            <.icon name="hero-pencil-square" class="w-4 h-4 mr-1" /> Edit
-          </.button>
+          <div class="flex items-center flex-wrap justify-end gap-actions">
+            <.button
+              color="white"
+              variant="outline"
+              to={~p"/locations/#{@location}/enclosures"}
+              link_type="live_redirect"
+            >
+              <.icon name="hero-home-modern" class="w-4 h-4 mr-1" /> Enclosures
+            </.button>
+            <.button
+              color="primary"
+              to={~p"/locations/#{@location}/edit?return_to=show"}
+              link_type="live_redirect"
+            >
+              <.icon name="hero-pencil-square" class="w-4 h-4 mr-1" /> Edit
+            </.button>
+          </div>
         </:actions>
       </.header>
 
@@ -43,7 +53,7 @@ defmodule DoggoWeb.LocationLive.Show do
             <div class="p-inset-icon rounded-lg bg-surface-accent dark:bg-surface-accent-dark">
               <.icon
                 name="hero-building-office-2"
-                class="w-6 h-6 text-primary-600 dark:text-primary-400"
+                class="w-6 h-6 text-text-accent dark:text-text-accent-dark"
               />
             </div>
             <div>
@@ -130,12 +140,12 @@ defmodule DoggoWeb.LocationLive.Show do
         </.surface_card>
 
         <%!-- Quick actions footer --%>
-        <div class="flex items-center justify-end pt-2">
+        <div class="flex items-center justify-end pt-block-actions">
           <.button
             color="danger"
             variant="outline"
             size="sm"
-            phx-click={show_modal("delete-confirm")}
+            phx-click={PetalComponents.Modal.show_modal("delete-confirm")}
           >
             <.icon name="hero-trash" class="w-4 h-4 mr-1" /> Delete
           </.button>

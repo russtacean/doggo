@@ -182,6 +182,18 @@ defmodule DoggoWeb.LocationLiveTest do
       assert_redirected(view, ~p"/locations/#{location.id}/edit?return_to=show")
     end
 
+    test "can navigate to enclosures for location", %{conn: conn} do
+      location = generate(location())
+
+      {:ok, view, _html} = live(conn, ~p"/locations/#{location.id}")
+
+      view
+      |> element("a[href=\"#{~p"/locations/#{location.id}/enclosures"}\"]", "Enclosures")
+      |> render_click()
+
+      assert_redirected(view, ~p"/locations/#{location.id}/enclosures")
+    end
+
     test "navigates with flash when location is missing", %{conn: conn} do
       missing_id = Ecto.UUID.generate()
 

@@ -17,23 +17,19 @@ defmodule DoggoWeb.LocationLive.Index do
         </:actions>
       </.header>
 
-      <%!-- Empty state --%>
       <div id="locations" phx-update="stream" class="space-y-stack-tight">
-        <div id="empty-state" class="hidden only:block text-center py-empty-state">
-          <.icon
-            name="hero-building-office-2"
-            class="w-16 h-16 mx-auto text-text-secondary dark:text-text-secondary-dark mb-empty-cta"
-          />
-          <h3 class="text-lg font-medium text-text-primary dark:text-text-primary-dark">
-            No locations yet
-          </h3>
-          <p class="text-text-secondary dark:text-text-secondary-dark mt-empty-prose mb-empty-cta">
-            Get started by creating your first shelter location
-          </p>
-          <.button color="primary" to={~p"/locations/new"} link_type="live_redirect">
-            <.icon name="hero-plus" class="w-4 h-4 mr-1" /> Add Location
-          </.button>
-        </div>
+        <.empty_state
+          id="empty-state"
+          icon="hero-building-office-2"
+          title="No locations yet"
+          subtitle="Get started by creating your first shelter location"
+        >
+          <:cta>
+            <.button color="primary" to={~p"/locations/new"} link_type="live_redirect">
+              <.icon name="hero-plus" class="w-4 h-4 mr-1" /> Add Location
+            </.button>
+          </:cta>
+        </.empty_state>
 
         <%!-- Location cards --%>
         <div
@@ -48,7 +44,7 @@ defmodule DoggoWeb.LocationLive.Index do
                 <div class="p-inset-icon rounded-lg bg-surface-accent dark:bg-surface-accent-dark shrink-0">
                   <.icon
                     name="hero-building-office-2"
-                    class="w-5 h-5 text-primary-600 dark:text-primary-400"
+                    class="w-5 h-5 text-text-accent dark:text-text-accent-dark"
                   />
                 </div>
                 <div class="min-w-0">
@@ -96,7 +92,7 @@ defmodule DoggoWeb.LocationLive.Index do
                   color="danger"
                   variant="ghost"
                   size="md"
-                  phx-click={show_modal("delete-confirm-#{location.id}")}
+                  phx-click={PetalComponents.Modal.show_modal("delete-confirm-#{location.id}")}
                   aria-label={gettext("Delete location")}
                   class="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200"
                 >
