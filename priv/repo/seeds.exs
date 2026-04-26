@@ -1,11 +1,14 @@
-# Script for populating the database. You can run it as:
+# Populates the database with demo / dev data.
 #
 #     mix run priv/repo/seeds.exs
 #
-# Inside the script, you can read and write to any of your
-# repositories directly:
+# Force a fresh seed (drops canonical dev locations first, then re-inserts):
 #
-#     Doggo.Repo.insert!(%Doggo.SomeSchema{})
+#     FORCE_DEV_SEED=1 mix run priv/repo/seeds.exs
 #
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
+# `mix setup` and `ecto.setup` also run this script. The seed is idempotent: it
+# skips when the primary dev location (see `Doggo.DevSeed`) already exists.
+
+force? = System.get_env("FORCE_DEV_SEED") in ~w(1 true yes)
+
+Doggo.DevSeed.run(force: force?)

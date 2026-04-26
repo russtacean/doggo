@@ -109,6 +109,24 @@ You'll need PostgreSQL running locally with:
 - Password: `postgres`
 - Host: `localhost:5432`
 
+## Database seeds
+
+The app ships with demo data for local development (locations, enclosures, sample shifts). The `setup` [alias in `mix.exs`](mix.exs) runs [`priv/repo/seeds.exs`](priv/repo/seeds.exs), so a fresh install usually does not need a separate seed step.
+
+**Run seeds manually** (e.g. after schema changes you want to try against fixed demo rows):
+
+```bash
+mix run priv/repo/seeds.exs
+```
+
+By default, seeding is **idempotent**: if the primary dev location already exists, the script no-ops. To **wipe and reload** the canonical dev locations and re-insert seed data (without resetting the whole database):
+
+```bash
+FORCE_DEV_SEED=1 mix run priv/repo/seeds.exs
+```
+
+The implementation lives in [`lib/doggo/dev_seed.ex`](lib/doggo/dev_seed.ex); you can also call `Doggo.DevSeed.run/0` (or `run/1` with `force: true` / `today:`) from `iex -S mix`.
+
 ## Learn more
 
 * Official website: https://www.phoenixframework.org/
