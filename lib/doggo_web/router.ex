@@ -23,6 +23,11 @@ defmodule DoggoWeb.Router do
     live "/locations/new", LocationLive.Form, :new
     live "/locations/:id/edit", LocationLive.Form, :edit
 
+    live "/locations/:location_id/enclosures", EnclosureLive.Index, :index
+    live "/locations/:location_id/enclosures/new", EnclosureLive.Form, :new
+    live "/locations/:location_id/enclosures/:id/edit", EnclosureLive.Form, :edit
+    live "/locations/:location_id/enclosures/:id", EnclosureLive.Show, :show
+
     live "/locations/:id", LocationLive.Show, :show
   end
 

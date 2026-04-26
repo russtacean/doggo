@@ -17,7 +17,7 @@ defmodule DoggoWeb.LocationLive.Form do
         </:subtitle>
       </.header>
 
-      <div class="bg-surface dark:bg-surface-dark border border-border-default dark:border-border-default-dark rounded-lg shadow-sm p-inset-card-lg max-w-2xl">
+      <.surface_card variant="static" class="p-inset-card-lg">
         <.form
           for={@form}
           id="location-form"
@@ -93,7 +93,7 @@ defmodule DoggoWeb.LocationLive.Form do
             </.button>
           </div>
         </.form>
-      </div>
+      </.surface_card>
     </Layouts.app>
     """
   end

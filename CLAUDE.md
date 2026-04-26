@@ -7,6 +7,7 @@ Doggo is intended to be an open source project to build a webapp for dog shelter
 
 ## Tech Stack
 - This project uses Elixir and relies heavily on Phoenix LiveView and Ash Framework.
+- Phoenix heavily uses Tailwind v4 for styling
 - We use [Petal Components](https://petal.build/components) `petal_components` for styled LiveView components. Use the component-function approach (`<.button>`, `<.alert>`, `<.badge>`, `<.field>`) in templates.
 
 See the `phoenix-framework` skill for Phoenix/LiveView patterns (streams, forms, navigation) as needed
@@ -17,10 +18,15 @@ See the `ash-framework` skill for domain + resource patterns as needed.
 This is a webapp that will be most heavily used on mobile phones, as volunteers will likely not have a laptop readily available at the shelter, so **mobile-first** design is a key consideration
 
 ### Design Tokens
-We use semantic design tokens for colors, spacing, and shadows. See `assets/css/semantic.css` for available tokens.
+We use semantic design tokens for colors, spacing, and shadows. See `assets/css/semantic.css` for available tokens. Examples: `text-text-accent` (icons on accent chips), `shadow-card` (resting card shadow), `max-w-form` (primary content width, used in the app layout `main` wrapper).
+
+### Core layout components (`lib/doggo_web/components/core_components.ex`)
+- **`surface_card`**: `variant="interactive"` (default) for list cards and other browsable rows—resting `shadow-card` plus hover lift. `variant="static"` for form panels and read-only detail blocks so the whole surface does not look tappable.
+- **`empty_state`**: Stream list empty states (icon, title, subtitle, optional `cta` slot) so index empty UIs stay consistent.
+- **Delete confirm** and **flash** patterns live in the same module; prefer these over ad hoc markup.
 
 ### Micro-interactions
-- Card hover: `hover:shadow-card-hover hover:border-border-accent transition-all duration-200`
+- Interactive `surface_card`: `shadow-card` at rest, then `hover:shadow-card-hover hover:border-border-accent dark:hover:border-border-accent-dark` (see component; list rows also use `group` and ghost actions as below).
 - Button active: `active:scale-95` (built into Petal)
 - Action visibility: Show edit/delete on hover with `opacity-100 sm:opacity-0 sm:group-hover:opacity-100` (always visible on mobile, hover-only on desktop)
 

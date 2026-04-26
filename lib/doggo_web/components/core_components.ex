@@ -110,7 +110,7 @@ defmodule DoggoWeb.CoreComponents do
 
   def error(assigns) do
     ~H"""
-    <p class="flex gap-3 mt-3 text-sm leading-6 text-text-danger dark:text-text-danger-dark">
+    <p class="flex gap-inline mt-error-block text-sm leading-6 text-text-danger dark:text-text-danger-dark">
       <.icon name="hero-exclamation-circle-mini" class="mt-0.5 h-5 w-5 flex-none" />
       {render_slot(@inner_block)}
     </p>
@@ -134,7 +134,7 @@ defmodule DoggoWeb.CoreComponents do
   def list(assigns) do
     ~H"""
     <ul class="divide-y divide-border-divider dark:divide-border-divider-dark">
-      <li :for={item <- @item} class="py-4">
+      <li :for={item <- @item} class="py-list-row">
         <div class="font-medium text-text-primary dark:text-text-primary-dark">{item.title}</div>
         <div class="text-text-secondary dark:text-text-secondary-dark">{render_slot(item)}</div>
       </li>
@@ -143,14 +143,18 @@ defmodule DoggoWeb.CoreComponents do
   end
 
   @doc """
-  Renders a card container with consistent surface, border, and hover styles.
+  Renders a card container with consistent surface, border, and optional hover styles.
+
+  * `variant="interactive"` (default) — list/index cards: resting `shadow-card` and hover lift.
+  * `variant="static"` — forms and read-only panels: no hover affordance on the container.
 
   ## Examples
 
-      <.card class="p-4">
+      <.surface_card class="p-inset-card">
         <p>Card content</p>
-      </.card>
+      </.surface_card>
   """
+  attr :variant, :string, default: "interactive", doc: "interactive | static"
   attr :class, :string, default: nil, doc: "additional Tailwind classes"
   slot :inner_block, required: true
 
@@ -158,11 +162,45 @@ defmodule DoggoWeb.CoreComponents do
     ~H"""
     <div class={[
       "bg-surface dark:bg-surface-dark border border-border-default dark:border-border-default-dark",
-      "rounded-lg shadow-sm hover:shadow-card-hover hover:border-border-accent dark:hover:border-border-accent-dark",
+      "rounded-lg shadow-card",
       "transition-all duration-200",
+      @variant == "interactive" &&
+        [
+          "hover:shadow-card-hover",
+          "hover:border-border-accent dark:hover:border-border-accent-dark"
+        ],
       @class
     ]}>
       {render_slot(@inner_block)}
+    </div>
+    """
+  end
+
+  @doc """
+  Empty state for stream-based index lists. Render as a direct child of the
+  `phx-update="stream"` container, sibling to streamed row elements.
+  """
+  attr :id, :string, required: true
+  attr :icon, :string, required: true, doc: "e.g. hero-home-modern"
+  attr :title, :string, required: true
+  attr :subtitle, :string, required: true
+  attr :class, :string, default: nil
+  slot :cta, doc: "primary call to action (e.g. a Petal button)"
+
+  def empty_state(assigns) do
+    ~H"""
+    <div id={@id} class={["hidden only:block text-center py-empty-state", @class]}>
+      <.icon
+        name={@icon}
+        class="w-16 h-16 mx-auto text-text-secondary dark:text-text-secondary-dark mb-empty-cta"
+      />
+      <h3 class="text-lg font-medium text-text-primary dark:text-text-primary-dark">
+        {@title}
+      </h3>
+      <p class="text-text-secondary dark:text-text-secondary-dark mt-empty-prose mb-empty-cta">
+        {@subtitle}
+      </p>
+      {render_slot(@cta)}
     </div>
     """
   end
@@ -198,7 +236,7 @@ defmodule DoggoWeb.CoreComponents do
   Renders a Petal modal to confirm destructive delete actions.
 
   Expects a LiveView handler for `confirm_event`. Open the modal from the template
-  with `show_modal/1` using the same `id` (default `"delete-confirm"`).
+  with `PetalComponents.Modal.show_modal/1` using the same `id` (default `"delete-confirm"`).
 
   ## Examples
 
