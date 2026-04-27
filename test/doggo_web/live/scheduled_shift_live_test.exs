@@ -36,6 +36,12 @@ defmodule DoggoWeb.ScheduledShiftLiveTest do
                view,
                "#empty-state a[href=\"#{~p"/locations/#{location}/scheduled_shifts/new"}\"]"
              )
+
+      assert has_element?(
+               view,
+               "#desktop-main-nav a[href=\"#{~p"/locations/#{location}/scheduled_shifts"}\"]",
+               "Scheduled shifts"
+             )
     end
 
     test "defaults date picker to the current calendar week", %{conn: conn, location: location} do

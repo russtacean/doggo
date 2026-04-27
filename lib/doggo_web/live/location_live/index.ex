@@ -6,7 +6,7 @@ defmodule DoggoWeb.LocationLive.Index do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash}>
+    <Layouts.app flash={@flash} current_page={:locations}>
       <.header>
         Locations
         <:subtitle>Manage shelter locations and their facilities</:subtitle>

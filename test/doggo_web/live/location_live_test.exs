@@ -26,6 +26,16 @@ defmodule DoggoWeb.LocationLiveTest do
       assert has_element?(view, "header a[href=\"#{~p"/locations/new"}\"]", "New Location")
     end
 
+    test "renders top-level shelter navigation without location-scoped links", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/locations")
+
+      assert has_element?(view, "#desktop-main-nav a[href=\"#{~p"/locations"}\"]", "Shelter")
+      refute has_element?(view, "#desktop-main-nav", "Location setup")
+      refute has_element?(view, "#desktop-main-nav", "Enclosures")
+      refute has_element?(view, "#desktop-main-nav", "Scheduled shifts")
+      refute has_element?(view, "#desktop-main-nav", "Weekly patterns")
+    end
+
     test "does not render archived locations", %{conn: conn} do
       active = generate(location(name: "Active Shelter"))
       archived = generate(location(name: "Archived Shelter"))
@@ -157,6 +167,14 @@ defmodule DoggoWeb.LocationLiveTest do
       assert has_element?(view, "p", "123 Main St")
       assert has_element?(view, "p", "Portland")
       assert has_element?(view, "p", "OR")
+      assert has_element?(view, "#app-nav-shell", "Show Test Shelter")
+      assert has_element?(view, "#desktop-main-nav a[href=\"#{~p"/locations"}\"]", "Shelter")
+
+      assert has_element?(
+               view,
+               "#desktop-main-nav a[href=\"#{~p"/locations/#{location.id}"}\"]",
+               "Overview"
+             )
 
       assert has_element?(
                view,
@@ -166,7 +184,25 @@ defmodule DoggoWeb.LocationLiveTest do
 
       assert has_element?(
                view,
+               "#desktop-main-nav a[href=\"#{~p"/locations/#{location.id}/enclosures"}\"]",
+               "Enclosures"
+             )
+
+      assert has_element?(
+               view,
+               "#desktop-main-nav a[href=\"#{~p"/locations/#{location.id}/scheduled_shifts"}\"]",
+               "Scheduled shifts"
+             )
+
+      assert has_element?(
+               view,
                "header a[href=\"#{~p"/locations/#{location.id}/recurring_shifts"}\"]",
+               "Weekly patterns"
+             )
+
+      assert has_element?(
+               view,
+               "#desktop-main-nav a[href=\"#{~p"/locations/#{location.id}/recurring_shifts"}\"]",
                "Weekly patterns"
              )
 
@@ -183,7 +219,7 @@ defmodule DoggoWeb.LocationLiveTest do
       {:ok, view, _html} = live(conn, ~p"/locations/#{location.id}")
 
       view
-      |> element("header a[href=\"#{~p"/locations"}\"]")
+      |> element("a[aria-label=\"Back\"][href=\"#{~p"/locations"}\"]")
       |> render_click()
 
       assert_redirected(view, ~p"/locations")
@@ -207,7 +243,7 @@ defmodule DoggoWeb.LocationLiveTest do
       {:ok, view, _html} = live(conn, ~p"/locations/#{location.id}")
 
       view
-      |> element("a[href=\"#{~p"/locations/#{location.id}/enclosures"}\"]", "Enclosures")
+      |> element("header a[href=\"#{~p"/locations/#{location.id}/enclosures"}\"]", "Enclosures")
       |> render_click()
 
       assert_redirected(view, ~p"/locations/#{location.id}/enclosures")
@@ -220,7 +256,7 @@ defmodule DoggoWeb.LocationLiveTest do
 
       view
       |> element(
-        "a[href=\"#{~p"/locations/#{location.id}/recurring_shifts"}\"]",
+        "header a[href=\"#{~p"/locations/#{location.id}/recurring_shifts"}\"]",
         "Weekly patterns"
       )
       |> render_click()
