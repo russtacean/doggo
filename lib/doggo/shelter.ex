@@ -42,6 +42,7 @@ defmodule Doggo.Shelter do
     resource Doggo.Shelter.RecurringShift do
       define :create_recurring_shift, action: :create
       define :list_recurring_shifts, action: :read
+      define :list_recurring_shifts_for_location, action: :list_for_location, args: [:location_id]
       define :get_recurring_shift, action: :read, get_by: [:id]
       define :update_recurring_shift, action: :update
       define :destroy_recurring_shift, action: :destroy

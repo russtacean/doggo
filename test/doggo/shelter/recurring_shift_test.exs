@@ -12,6 +12,33 @@ defmodule Doggo.Shelter.RecurringShiftTest do
       %{location: location}
     end
 
+    test "list_recurring_shifts_for_location!/1 returns only shifts for that location", %{
+      location: location
+    } do
+      other = TestGenerators.generate(TestGenerators.location())
+
+      ours =
+        Shelter.create_recurring_shift!(%{
+          name: "Isolated",
+          day_of_week: 2,
+          start_time: ~T[10:00:00],
+          end_time: ~T[11:00:00],
+          location: location.id
+        })
+
+      Shelter.create_recurring_shift!(%{
+        name: "Other place",
+        day_of_week: 3,
+        start_time: ~T[10:00:00],
+        end_time: ~T[11:00:00],
+        location: other.id
+      })
+
+      for_loc = Shelter.list_recurring_shifts_for_location!(location.id)
+      assert length(for_loc) == 1
+      assert hd(for_loc).id == ours.id
+    end
+
     test "create_recurring_shift/1 with valid attributes", %{location: location} do
       recurring_shift =
         Shelter.create_recurring_shift!(%{

@@ -61,7 +61,9 @@ defmodule Doggo.TestGenerators do
         name: "Test Recurring Shift #{unique_int}",
         day_of_week: day_of_week,
         start_time: start_time,
-        end_time: end_time
+        end_time: end_time,
+        start_date: nil,
+        end_date: nil
       ],
       overrides: opts
     )

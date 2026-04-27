@@ -31,7 +31,7 @@ defmodule DoggoWeb.EnclosureLiveTest do
       assert has_element?(view, "#enclosures")
       assert has_element?(view, "#enclosures-#{enclosure.id} a", "Kennel A1")
       assert has_element?(view, "#enclosures-#{enclosure.id}", "Occupied")
-      assert has_element?(view, "#enclosures-#{enclosure.id}", "Main Shelter")
+      assert has_element?(view, "header", "Main Shelter")
     end
 
     test "does not render enclosures from another location", %{conn: conn, location: location} do

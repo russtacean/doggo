@@ -32,6 +32,15 @@ defmodule Doggo.Shelter.RecurringShift do
       accept [:name, :day_of_week, :start_time, :end_time, :start_date, :end_date]
     end
 
+    read :list_for_location do
+      argument :location_id, :uuid do
+        allow_nil? false
+      end
+
+      prepare build(filter: expr(location_id == ^arg(:location_id)))
+      prepare build(sort: [day_of_week: :asc, start_time: :asc])
+    end
+
     read :active_for_location_and_day do
       argument :location_id, :uuid do
         allow_nil? false
