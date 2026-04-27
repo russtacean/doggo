@@ -54,6 +54,28 @@ defmodule Doggo.Shelter.ScheduledShift do
 
       prepare build(filter: expr(location_id == ^arg(:location_id) and date >= ^arg(:from_date)))
     end
+
+    read :list_for_location_between_dates do
+      argument :location_id, :uuid do
+        allow_nil? false
+      end
+
+      argument :start_date, :date do
+        allow_nil? false
+      end
+
+      argument :end_date, :date do
+        allow_nil? false
+      end
+
+      prepare build(
+                filter:
+                  expr(
+                    location_id == ^arg(:location_id) and date >= ^arg(:start_date) and
+                      date < ^arg(:end_date)
+                  )
+              )
+    end
   end
 
   preparations do
