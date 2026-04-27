@@ -34,6 +34,10 @@ defmodule Doggo.Shelter do
         action: :list_upcoming,
         args: [:location_id, :from_date]
 
+      define :list_scheduled_shifts_for_location_between_dates,
+        action: :list_for_location_between_dates,
+        args: [:location_id, :start_date, :end_date]
+
       define :get_scheduled_shift, action: :read, get_by: [:id]
       define :update_scheduled_shift, action: :update
       define :destroy_scheduled_shift, action: :destroy

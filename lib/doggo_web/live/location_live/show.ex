@@ -29,6 +29,15 @@ defmodule DoggoWeb.LocationLive.Show do
             <.button
               color="white"
               variant="outline"
+              to={~p"/locations/#{@location}/scheduled_shifts"}
+              link_type="live_redirect"
+              class="w-full justify-center sm:w-auto"
+            >
+              <.icon name="hero-calendar-days" class="w-4 h-4 mr-1" /> Scheduled shifts
+            </.button>
+            <.button
+              color="white"
+              variant="outline"
               to={~p"/locations/#{@location}/recurring_shifts"}
               link_type="live_redirect"
               class="w-full justify-center sm:w-auto"
