@@ -81,7 +81,7 @@ defmodule DoggoWeb.EnclosureLive.Index do
                   to={~p"/locations/#{@location}/enclosures/#{enclosure}/edit"}
                   link_type="live_redirect"
                   aria-label={gettext("Edit enclosure")}
-                  class="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 hover:bg-surface-hover dark:hover:bg-surface-hover-dark"
+                  class="min-h-11 min-w-11 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 hover:bg-surface-hover dark:hover:bg-surface-hover-dark"
                 >
                   <.icon name="hero-pencil-square" class="w-4 h-4" />
                 </.button>
@@ -91,7 +91,7 @@ defmodule DoggoWeb.EnclosureLive.Index do
                   size="md"
                   phx-click={PetalComponents.Modal.show_modal("delete-confirm-#{enclosure.id}")}
                   aria-label={gettext("Delete enclosure")}
-                  class="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200"
+                  class="min-h-11 min-w-11 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200"
                 >
                   <.icon name="hero-trash" class="w-4 h-4" />
                 </.button>

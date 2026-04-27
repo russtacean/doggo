@@ -24,7 +24,7 @@ defmodule DoggoWeb.Layouts do
 
     ~H"""
     <div class="min-h-dvh bg-surface-inset dark:bg-surface-inset-dark">
-      <header class="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-border-default bg-surface/95 px-4 py-3 backdrop-blur dark:border-border-default-dark dark:bg-surface-dark/95 lg:hidden">
+      <header class="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-border-default bg-surface/95 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur dark:border-border-default-dark dark:bg-surface-dark/95 lg:hidden">
         <a href={~p"/locations"} class="flex min-w-0 items-center gap-3">
           <img src={~p"/images/logo.svg"} width="36" height="36" alt="Doggo" />
           <div class="min-w-0">
@@ -46,16 +46,19 @@ defmodule DoggoWeb.Layouts do
         </button>
       </header>
 
-      <div id="app-nav-shell" class="fixed inset-0 z-50 hidden lg:block">
+      <div
+        id="app-nav-shell"
+        class="fixed inset-0 z-50 hidden lg:pointer-events-none lg:block"
+      >
         <button
           type="button"
           class="absolute inset-0 h-full w-full bg-gray-900/50 lg:hidden"
           aria-label={gettext("Close navigation")}
           phx-click={JS.add_class("hidden", to: "#app-nav-shell")}
         />
-        <aside class="relative flex h-full w-80 max-w-[85vw] flex-col border-r border-border-default bg-surface shadow-modal dark:border-border-default-dark dark:bg-surface-dark lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:max-w-none lg:shadow-none">
-          <div class="flex items-center justify-between gap-3 border-b border-border-divider px-4 py-4 dark:border-border-divider-dark">
-            <.brand_lockup location_name={@location_name} />
+        <aside class="relative flex h-full w-60 max-w-[65vw] flex-col border-r border-border-default bg-surface shadow-modal dark:border-border-default-dark dark:bg-surface-dark lg:pointer-events-auto lg:fixed lg:inset-y-0 lg:left-0 lg:w-60 lg:max-w-none lg:shadow-none">
+          <div class="flex items-center justify-between gap-3 border-b border-border-divider px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] dark:border-border-divider-dark">
+            <.brand_lockup location_name={@location_name} logo_size={36} />
             <button
               type="button"
               class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-text-secondary hover:bg-surface-hover hover:text-text-primary active:scale-95 dark:text-text-secondary-dark dark:hover:bg-surface-hover-dark dark:hover:text-text-primary-dark lg:hidden"
@@ -91,16 +94,25 @@ defmodule DoggoWeb.Layouts do
   end
 
   attr :location_name, :string, default: nil
+  attr :logo_size, :integer, default: 40
 
   defp brand_lockup(assigns) do
     ~H"""
     <a href={~p"/locations"} class="flex min-w-0 items-center gap-3">
-      <img src={~p"/images/logo.svg"} width="40" height="40" alt="Doggo" />
+      <img src={~p"/images/logo.svg"} width={@logo_size} height={@logo_size} alt="Doggo" />
       <div class="min-w-0">
-        <p class="text-base font-semibold leading-6 text-text-primary dark:text-text-primary-dark">
+        <p class={[
+          "font-semibold text-text-primary dark:text-text-primary-dark",
+          @logo_size == 36 && "text-sm leading-5",
+          @logo_size == 40 && "text-base leading-6"
+        ]}>
           Doggo
         </p>
-        <p class="truncate text-sm text-text-secondary dark:text-text-secondary-dark">
+        <p class={[
+          "truncate text-text-secondary dark:text-text-secondary-dark",
+          @logo_size == 36 && "text-xs",
+          @logo_size == 40 && "text-sm"
+        ]}>
           {@location_name || "Shelter operations"}
         </p>
       </div>

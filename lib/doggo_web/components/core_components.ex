@@ -169,6 +169,7 @@ defmodule DoggoWeb.CoreComponents do
       "transition-all duration-200",
       @variant == "interactive" &&
         [
+          "cursor-pointer",
           "hover:shadow-card-hover",
           "hover:border-border-accent dark:hover:border-border-accent-dark"
         ],
@@ -231,6 +232,61 @@ defmodule DoggoWeb.CoreComponents do
       {@rest}
     >
       <.icon name="hero-arrow-left" class="w-5 h-5" />
+    </.button>
+    """
+  end
+
+  @doc """
+  Renders an icon-only action button with proper touch targets.
+
+  This component provides a ghost-style button optimized for list/card actions
+  with WCAG-compliant touch targets (44px minimum). Use for edit/delete actions
+  that appear on list items.
+
+  ## Examples
+
+      <.icon_action_button
+        icon="hero-pencil-square"
+        to={"/locations/123/edit"}
+        aria-label="Edit location"
+      />
+
+      <.icon_action_button
+        icon="hero-trash"
+        color="danger"
+        phx-click={PetalComponents.Modal.show_modal("delete-confirm")}
+        aria-label="Delete location"
+      />
+  """
+  attr :icon, :string, required: true, doc: "Heroicon name (e.g., hero-pencil-square)"
+  attr :color, :string, default: "gray", doc: "gray | danger"
+  attr :to, :string, default: nil, doc: "path for link (omit for event-based actions)"
+  attr :link_type, :string, default: "live_redirect"
+  attr :aria_label, :string, required: true, doc: "accessibility label for the button"
+  attr :phx_click, :any, default: nil, doc: "phx-click handler for modal triggers"
+  attr :class, :string, default: nil, doc: "additional Tailwind classes"
+  attr :rest, :global
+
+  def icon_action_button(assigns) do
+    ~H"""
+    <.button
+      color={@color}
+      variant="ghost"
+      size="md"
+      to={@to}
+      link_type={@to && @link_type}
+      phx-click={@phx_click}
+      aria-label={@aria_label}
+      class={[
+        "min-h-11 min-w-11",
+        "opacity-100 sm:opacity-0 sm:group-hover:opacity-100",
+        "transition-opacity duration-200",
+        @color == "gray" && "hover:bg-surface-hover dark:hover:bg-surface-hover-dark",
+        @class
+      ]}
+      {@rest}
+    >
+      <.icon name={@icon} class="w-4 h-4" />
     </.button>
     """
   end
