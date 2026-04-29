@@ -8,7 +8,7 @@ defmodule DoggoWeb.RecurringShiftLive.Index do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash}>
+    <Layouts.app flash={@flash} current_page={:recurring_shifts} location={@location}>
       <.header>
         <div class="flex min-w-0 items-center gap-inline">
           <.back_button to={~p"/locations/#{@location}"} />
@@ -86,7 +86,7 @@ defmodule DoggoWeb.RecurringShiftLive.Index do
                         to={~p"/locations/#{@location}/recurring_shifts/#{rs}/edit"}
                         link_type="live_redirect"
                         aria-label={gettext("Edit weekly pattern")}
-                        class="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 hover:bg-surface-hover dark:hover:bg-surface-hover-dark"
+                        class="min-h-11 min-w-11 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 hover:bg-surface-hover dark:hover:bg-surface-hover-dark"
                       >
                         <.icon name="hero-pencil-square" class="w-4 h-4" />
                       </.button>
@@ -96,7 +96,7 @@ defmodule DoggoWeb.RecurringShiftLive.Index do
                         size="md"
                         phx-click={PetalComponents.Modal.show_modal("delete-confirm-#{rs.id}")}
                         aria-label={gettext("Delete weekly pattern")}
-                        class="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200"
+                        class="min-h-11 min-w-11 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200"
                       >
                         <.icon name="hero-trash" class="w-4 h-4" />
                       </.button>

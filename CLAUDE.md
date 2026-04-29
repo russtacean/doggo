@@ -23,12 +23,25 @@ We use semantic design tokens for colors, spacing, and shadows. See `assets/css/
 ### Core layout components (`lib/doggo_web/components/core_components.ex`)
 - **`surface_card`**: `variant="interactive"` (default) for list cards and other browsable rows—resting `shadow-card` plus hover lift. `variant="static"` for form panels and read-only detail blocks so the whole surface does not look tappable.
 - **`empty_state`**: Stream list empty states (icon, title, subtitle, optional `cta` slot) so index empty UIs stay consistent.
+- **`icon_action_button`**: Ghost icon button for list/card actions with built-in touch targets and hover visibility. Use for edit/delete actions on list items. Example: `<.icon_action_button icon="hero-pencil-square" to={~p"/edit"} aria-label="Edit" />`
 - **Delete confirm** and **flash** patterns live in the same module; prefer these over ad hoc markup.
 
 ### Micro-interactions
 - Interactive `surface_card`: `shadow-card` at rest, then `hover:shadow-card-hover hover:border-border-accent dark:hover:border-border-accent-dark` (see component; list rows also use `group` and ghost actions as below).
 - Button active: `active:scale-95` (built into Petal)
 - Action visibility: Show edit/delete on hover with `opacity-100 sm:opacity-0 sm:group-hover:opacity-100` (always visible on mobile, hover-only on desktop)
+
+### Mobile UX Patterns
+Since volunteers use this app outdoors, often while wearing gloves:
+
+- **Touch targets**: All interactive elements must be minimum 44x44px (WCAG 2.1). Use the `--size-touch-target` token (11 * 0.25rem) or `min-h-11 min-w-11` class.
+- **Safe areas**: Mobile headers use `pt-[max(0.75rem,env(safe-area-inset-top))]` to account for iOS notch/Dynamic Island.
+- **Use `icon_action_button`**: Prefer this component over manual ghost buttons—it handles touch targets and hover states consistently.
+- **Outdoor readability**: Secondary text uses `gray-600` instead of `gray-500` for better contrast in sunlight.
+
+### Sizing Tokens (`semantic.css`)
+In addition to spacing tokens, we define sizing tokens:
+- `--size-touch-target`: WCAG minimum 44px touch target size. Use for any button that needs to be reliably tappable on mobile.
 
 # Contributing to the repository
 - Whenever you make changes, use red-green TDD to validate your changes

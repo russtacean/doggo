@@ -6,7 +6,7 @@ defmodule DoggoWeb.ScheduledShiftLive.Form do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash}>
+    <Layouts.app flash={@flash} current_page={:scheduled_shifts} location={@location}>
       <.header>
         <div class="flex items-center gap-inline">
           <.back_button to={return_path(@return_to, @location, @scheduled_shift)} />

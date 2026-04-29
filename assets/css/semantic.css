@@ -16,7 +16,8 @@
     /* ===== TEXT ===== */
     --color-text-primary: var(--color-gray-900);
     --color-text-primary-dark: var(--color-gray-100);
-    --color-text-secondary: var(--color-gray-500);
+    /* Using gray-600 for better outdoor readability (WCAG AA contrast) */
+    --color-text-secondary: var(--color-gray-600);
     --color-text-secondary-dark: var(--color-gray-400);
     /* Icons on surface-accent (chip) and other primary-accent UI */
     --color-text-accent: var(--color-primary-600);
@@ -72,4 +73,8 @@
     --spacing-block-actions: calc(var(--spacing) * 6);
     --spacing-list-row: calc(var(--spacing) * 4);
     --spacing-error-block: calc(var(--spacing) * 3);
+
+    /* ===== SIZING ===== */
+    /* WCAG 2.1 minimum touch target: 44x44px (11 * 0.25rem = 2.75rem ≈ 44px) */
+    --size-touch-target: calc(var(--spacing) * 11);
 }

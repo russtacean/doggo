@@ -6,7 +6,7 @@ defmodule DoggoWeb.LocationLive.Show do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash}>
+    <Layouts.app flash={@flash} current_page={:location_overview} location={@location}>
       <.header>
         <div class="flex min-w-0 items-center gap-inline">
           <.back_button to={~p"/locations"} />

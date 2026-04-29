@@ -6,7 +6,11 @@ defmodule DoggoWeb.LocationLive.Form do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash}>
+    <Layouts.app
+      flash={@flash}
+      current_page={if is_nil(@location), do: :locations, else: :location_overview}
+      location={@location}
+    >
       <.header>
         <div class="flex items-center gap-inline">
           <.back_button to={return_path(@return_to, @location)} />
