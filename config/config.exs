@@ -55,6 +55,19 @@ config :doggo,
   generators: [timestamp_type: :utc_datetime],
   ash_domains: [Doggo.Shelter]
 
+config :ash_oban,
+  shared_context: [:job]
+
+thirty_days_seconds = 60 * 60 * 24 * 30
+
+config :doggo, Oban,
+  engine: Oban.Engines.Basic,
+  repo: Doggo.Repo,
+  queues: [default: 10],
+  plugins: [
+    {Oban.Plugins.Pruner, max_age: thirty_days_seconds}
+  ]
+
 # Configure the endpoint
 config :doggo, DoggoWeb.Endpoint,
   url: [host: "localhost"],
