@@ -100,6 +100,7 @@ defmodule Doggo.MixProject do
       {:ash_phoenix, "~> 2.0"},
       {:oban, "~> 2.20"},
       {:ash_oban, "~> 0.8.10"},
+      {:tzdata, "~> 1.1"},
       {:usage_rules, "~> 1.0", only: [:dev]},
       {:ash_admin, "~> 0.14"},
       {:igniter, "~> 0.7.7", only: [:dev, :test]},

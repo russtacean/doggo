@@ -7,6 +7,8 @@
 # General application configuration
 import Config
 
+config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
+
 config :ash,
   allow_forbidden_field_for_relationships_by_default?: true,
   include_embedded_source_by_default?: false,
@@ -65,6 +67,7 @@ config :doggo, Oban,
   repo: Doggo.Repo,
   queues: [default: 10],
   plugins: [
+    {Oban.Plugins.Cron, crontab: []},
     {Oban.Plugins.Pruner, max_age: thirty_days_seconds}
   ]
 

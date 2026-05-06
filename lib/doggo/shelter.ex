@@ -54,6 +54,8 @@ defmodule Doggo.Shelter do
       define :list_active_recurring_shifts_for_location_and_day,
         action: :active_for_location_and_day,
         args: [:location_id, :day_of_week, :date]
+
+      define :materialize_scheduled_shifts, action: :materialize_scheduled_shifts
     end
   end
 end

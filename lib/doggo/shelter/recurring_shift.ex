@@ -1,5 +1,9 @@
 defmodule Doggo.Shelter.RecurringShift do
-  use Ash.Resource, otp_app: :doggo, domain: Doggo.Shelter, data_layer: AshPostgres.DataLayer
+  use Ash.Resource,
+    otp_app: :doggo,
+    domain: Doggo.Shelter,
+    data_layer: AshPostgres.DataLayer,
+    extensions: [AshOban]
 
   postgres do
     table "recurring_shifts"
@@ -7,6 +11,17 @@ defmodule Doggo.Shelter.RecurringShift do
 
     references do
       reference :location, index?: true, on_delete: :delete
+    end
+  end
+
+  oban do
+    scheduled_actions do
+      schedule :materialize_scheduled_shifts, "0 8 * * *" do
+        action :materialize_scheduled_shifts
+        worker_module_name(Doggo.Shelter.Workers.MaterializeScheduledShifts)
+        queue(:default)
+        max_attempts(3)
+      end
     end
   end
 
@@ -62,6 +77,25 @@ defmodule Doggo.Shelter.RecurringShift do
                       (is_nil(end_date) or end_date > ^arg(:date))
                   )
               )
+    end
+
+    action :materialize_scheduled_shifts, :integer do
+      description "Create scheduled shifts from active recurring shift patterns."
+
+      argument :as_of, :utc_datetime do
+        allow_nil? true
+      end
+
+      argument :horizon_days, :integer do
+        allow_nil? true
+      end
+
+      run fn input, _context ->
+        Doggo.Shelter.RecurringShift.Materializer.materialize(
+          as_of: Map.get(input.arguments, :as_of),
+          horizon_days: Map.get(input.arguments, :horizon_days)
+        )
+      end
     end
   end
 
