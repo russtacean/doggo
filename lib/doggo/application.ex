@@ -10,6 +10,11 @@ defmodule Doggo.Application do
     children = [
       DoggoWeb.Telemetry,
       Doggo.Repo,
+      {Oban,
+       AshOban.config(
+         Application.fetch_env!(:doggo, :ash_domains),
+         Application.fetch_env!(:doggo, Oban)
+       )},
       {DNSCluster, query: Application.get_env(:doggo, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Doggo.PubSub},
       # Start a worker by calling: Doggo.Worker.start_link(arg)
